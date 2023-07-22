@@ -1,0 +1,78 @@
+svg {
+  background-color: transparent;
+}
+
+svg line {
+  pointer-events: none;
+}
+
+svg circle {
+  shape-rendering: geometricPrecision;
+}
+
+.axes {
+  color: #373737;
+}
+
+.axes text {
+  pointer-events: none;
+}
+
+.yAxis {
+  font-size: 14px;
+}
+
+.yAxis {
+  stroke-width: 2px;
+  stroke-opacity: 0.5;
+  shape-rendering: crispEdges;
+}
+
+.gridAxis line {
+  stroke-width: 1;
+  stroke-opacity: 0.1;
+  stroke: black;
+}
+
+.nameAxis line {
+  stroke: black;
+  stroke-opacity: 0.1;
+  stroke-width: 1;
+}
+
+.nameAxis text {
+  font-size: 18px;
+  font-family: mono;
+  text-anchor: middle;
+}
+
+.nameAxisMask {
+  fill: white;
+}
+
+.timeCircle {
+  stroke: transparent;
+  stroke-width: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+  .axes {
+    color: white;
+  }
+
+  .gridAxis line {
+    stroke: white;
+  }
+
+  .nameAxis line {
+    stroke: white;
+  }
+
+  .nameAxis text {
+    fill: white;
+  }
+
+  .nameAxisMask {
+    fill: #1e293b;
+  }
+}
