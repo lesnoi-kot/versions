@@ -30,10 +30,16 @@ export function useSelectedSources() {
     if (source.isFetching) {
       queryClient.setQueryDefaults(["dataset", source.id], {
         refetchInterval: 3000,
+        onSuccess() {
+          queryClient.invalidateQueries({
+            queryKey: ["datasets"],
+          });
+        },
       });
     } else {
       queryClient.setQueryDefaults(["dataset", source.id], {
         refetchInterval: Infinity,
+        onSuccess: undefined,
       });
     }
   });

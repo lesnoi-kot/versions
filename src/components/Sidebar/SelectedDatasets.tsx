@@ -11,7 +11,7 @@ import {
 import Item from "./Item";
 
 export default function SelectedDatasets() {
-  const { isLoading, isSuccess, isError, sources } = useSelectedSources();
+  const { isLoading, sources } = useSelectedSources();
 
   if (sources.length === 0) {
     return null;

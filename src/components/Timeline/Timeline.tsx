@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 
-import { useZoomSettings } from "store/timeline";
+// import { useZoomSettings } from "store/timeline";
 import { useSelectedSources } from "store/queries";
 import { Source } from "models";
 

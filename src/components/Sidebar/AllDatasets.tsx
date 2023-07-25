@@ -14,10 +14,11 @@ export default function AllDatasets() {
   const [page, setPage] = useState(0);
   const [name, setName] = useState("");
 
-  const { isLoading, isSuccess, data } = useQuery({
+  const { isLoading, isSuccess, isError, error, data } = useQuery({
     queryFn: () => api.getSources({ page, name, count: PAGE_COUNT }),
     queryKey: ["datasets", { page, name }],
     keepPreviousData: true,
+    retry: 0,
   });
   const { data: sources = [], totalCount = 0 } = data || {};
   const maxPage = Math.ceil(totalCount / PAGE_COUNT);
@@ -39,6 +40,7 @@ export default function AllDatasets() {
       />
       <div className="flex flex-col gap-3">
         {isLoading && <Spinner className="m-auto" />}
+        {isError && <div className="text-red-600">{String(error)}</div>}
         {isSuccess && sources.length === 0 && <span>Nothing was found</span>}
         {sources.map((source) => (
           <Item key={source.id} source={source}>

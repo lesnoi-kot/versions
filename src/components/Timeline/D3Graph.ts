@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import tippy from "tippy.js";
 import addYears from "date-fns/addYears";
 import formatDate from "date-fns/format";
+import { Instance } from "tippy.js";
 
 import type { Source } from "models";
 import { DEFAULT_ZOOM, MAX_ZOOM, useZoomSettings } from "store/timeline";
@@ -148,10 +149,19 @@ export class D3Graph {
       .data(this.sources, getSourceId)
       .join("text")
       .text((d) => d.name)
-      .attr("x", (d, i) => (i + 1) * TIMELINE_GAP)
+      .attr("x", (_, i) => (i + 1) * TIMELINE_GAP)
       .attr("y", Math.floor(ROOT_MARGIN_TOP / 1.5))
       .style("cursor", "pointer")
-      .on("click", (e, source) => {
+      .style("font-size", (d) => {
+        if (d.name.length > 15) {
+          return "0.6rem";
+        }
+        if (d.name.length > 10) {
+          return "0.8rem";
+        }
+        return "1rem";
+      })
+      .on("click", (_, source) => {
         this.panToSources([source]);
       });
 
@@ -159,9 +169,9 @@ export class D3Graph {
       .selectAll("line")
       .data(this.sources, (d, i) => (d ? getSourceId(d) : i))
       .join("line")
-      .attr("x1", (d, i) => (i + 1.5) * TIMELINE_GAP)
+      .attr("x1", (_, i) => (i + 1.5) * TIMELINE_GAP)
       .attr("y1", ROOT_MARGIN_TOP)
-      .attr("x2", (d, i) => (i + 1.5) * TIMELINE_GAP)
+      .attr("x2", (_, i) => (i + 1.5) * TIMELINE_GAP)
       .attr("y2", "100%");
 
     const sourceContainer = this.circlesContainer
@@ -197,10 +207,17 @@ export class D3Graph {
       .data((d) => groupReleases(d.releases, this.timeScale))
       .join("path")
       .attr("class", "timeline-group-axis")
-      .on("mouseover", function (event, d) {
+      .on("mouseover", function (_, d) {
+        // @ts-expect-error Tippy is present
+        if (this._tippy) {
+          // @ts-expect-error Tippy is present
+          (this._tippy as Instance).destroy();
+        }
+
         tippy(this as SVGCircleElement, {
           allowHTML: true,
           content: getPopupHTML(d),
+          offset: [0, -20],
         });
       })
       .attr("d", (d) => {
@@ -228,12 +245,12 @@ export class D3Graph {
     }
   }
 
-  setZoom(k: number) {
-    // const transform = d3 // @ts-expect-error Selection is ok
-    //   .zoomTransform(this.zoomContainer);
-    // this.zoomBehaviour.transform(this.zoomContainer, transform.scale(k));
-    // this.update();
-  }
+  // setZoom(k: number) {
+  // const transform = d3 // @ts-expect-error Selection is ok
+  //   .zoomTransform(this.zoomContainer);
+  // this.zoomBehaviour.transform(this.zoomContainer, transform.scale(k));
+  // this.update();
+  // }
 
   onZoom({ transform }: d3.D3ZoomEvent<SVGGElement, unknown>) {
     this.timeScale = transform.rescaleY(originalTimeScale);
@@ -287,4 +304,4 @@ function getPopupHTML(group: TimelineGroup) {
   `;
 }
 
-const getSourceId = (d: any) => (d as Source).id;
+const getSourceId = (d: unknown) => (d as Source).id;

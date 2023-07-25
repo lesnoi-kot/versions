@@ -36,6 +36,11 @@ export class API {
     }
 
     const resp = await fetch(url);
+
+    if (!resp.ok) {
+      throw new Error(resp.statusText);
+    }
+
     const body = await resp.json();
 
     return {
@@ -46,6 +51,11 @@ export class API {
 
   async getSource(sourceId: string): Promise<Source> {
     const resp = await fetch(new URL(`sources/${sourceId}`, this.baseURL));
+
+    if (!resp.ok) {
+      throw new Error(resp.statusText);
+    }
+
     const source = await resp.json();
     return sourceDtoToModel(source);
   }
